@@ -1,0 +1,16 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+version = "1.0-SNAPSHOT"
+group = "com.noahsloan.atg"
+
+repositories {
+	mavenRepo name:'mavenLocal',
+              urls:new File(System.getProperty("user.home"), ".m2/repository").toURL().toString()
+    mavenCentral()
+}
+
+dependencies {
+	compile "org.apache.ivy:ivy:2.2.0@jar"
+	groovy group: 'org.codehaus.groovy', name: 'groovy-all', version: "1.6.0"
+}
