@@ -45,9 +45,16 @@ This creates a class loader to load the required classes directly from the jar.
 
 Use the Grails [plugin][atg-grails-plugin] and declare dependencies as above.
 
-If you can't use the plugin for some reason, the configuration is almost the same as Gradle.
-Inside `grails.project.dependency.resolution` add the snippet from the Gradle section but change
-`add` to `resolver` and the file path to `${basedir}/lib/atg-resolver-1.0-SNAPSHOT.jar`.
+If you can't use the plugin for some reason, then you can add this to 
+grails-app/conf/BuildConfig.groovy:
+
+	@Grab(group='com.noahsloan.atg',module="atg-resolver",version="1.0")
+	import com.noahsloan.atg.ivy.AtgModuleRepository
+
+	grails.project.dependency.resolution = {
+		resolver AtgModuleRepository.newResolver		
+		// ... 
+	}
 
 See the plugin for an [example][atg-grails-build-config].
 
