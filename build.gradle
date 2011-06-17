@@ -38,7 +38,7 @@ allprojects {
 		archives javadocJar
 	}
 
-	version = "1.0"
+	version = "1.1-SNAPSHOT"
 	group = "com.noahsloan.atg"
 
 	description = "Provides an Ivy DependencyResolver that can resolve ATG modules as dependencies."
