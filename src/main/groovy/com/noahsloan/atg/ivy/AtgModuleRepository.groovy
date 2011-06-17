@@ -9,6 +9,11 @@ import org.apache.ivy.plugins.resolver.packager.BuiltFileResource;
 import org.apache.tools.ant.taskdefs.Jar;
 import org.apache.tools.ant.taskdefs.Manifest;
 
+/**
+ * Respository implementation that resolves ATG modules as dependencies.
+ * The jar file resolved will be the module's classes.jar file.
+ * Module manifests are parsed to resolve dependencies on other modules.
+ */
 class AtgModuleRepository extends AbstractRepository {
 	
 	final ORG = 'ATG_MODULE'
@@ -142,6 +147,12 @@ class AtgModuleRepository extends AbstractRepository {
 		return Collections.emptyList();
 	}
 	
+	/**
+	 * Factory method for creating a resolver using an instance of the repository.
+	 * 
+	 * @param name the resolver name. Default is "ATG Resolver"
+	 * @return a configured RepositoryResolver.
+	 */
 	public static RepositoryResolver getNewResolver(name = "ATG Resolver") {
 		def repo = new AtgModuleRepository()
 		def atgResolver = new RepositoryResolver()
