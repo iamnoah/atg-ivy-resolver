@@ -8,7 +8,8 @@ environment variable.
 	provided group:'ATG_MODULE', name:'DAS', version:'SNAPSHOT'
 
 Module dependencies use the group `ATG_MODULE`. 
-The artifact name is the name of the module,e.g., `DAS`.  The version should be `SNAPSHOT` so modules can be updated.
+The artifact name is the name of the module,e.g., `DAS`. 
+The version should be `SNAPSHOT` so modules can be updated.
 
 If you are developing an ATG module, your module can declare a dependency on itself. e.g.,
 
@@ -23,23 +24,29 @@ Any build system that utilizes Ivy will work, but here are some common examples:
 
 ### Gradle
 
-Because we are loading a custom resolver, the atg-resolver jar cannot
-be a dependency. That makes it a little tricky to use.
+You can use a [`buildscript`][gradle-external-deps] section to download the resolver jar so it can be 
+added as a repository in your main script:
 
-If you can add the atg-resolver jar to your Gradle classpath, then you
-can just add this to the `repositories` section:
+	buildscript {
+	    repositories {
+	        mavenCentral()
+	    }
+	    dependencies {
+	        classpath 'com.noahsloan.atg:atg-resolver:1.0'
+	    }
+	}
 
-	add com.noahsloan.atg.ivy.AtgModuleRepository.newResolver
+	allprojects { // see http://gradle.org/current/docs/userguide/userguide_single.html#sec:subproject_configuration
+		repositories {
+			add com.noahsloan.atg.ivy.AtgModuleRepository.newResolver
+		}
 
-If not, then you should add the jar to your project manually and add this:
-
-	def myCL = new URLClassLoader([new File(
-				"atg-resolver-1.0-SNAPSHOT.jar"
-			).toURI().toURL()] as URL[],
-			org.apache.ivy.plugins.repository.AbstractRepository.classLoader)
-	add myCL.loadClass('com.noahsloan.atg.ivy.AtgModuleRepository').newResolver
-
-This creates a class loader to load the required classes directly from the jar.
+		dependencies {
+		    compile group:"ATG_MODULE", name:"DAS",version:"SNAPSHOT"
+		}
+		
+		// the rest of your tasks go here
+	}
 
 ### Grails
 
@@ -68,3 +75,4 @@ What you do with it is beyond the scope of this file right now.
 
 [atg-grails-plugin]: https://github.com/iamnoah/grails-atg-core-plugin "It's awesome."
 [atg-grails-build-config]: https://github.com/iamnoah/grails-atg-core-plugin/blob/master/grails-app/conf/BuildConfig.groovy#L17
+[gradle-external-deps]: http://gradle.org/current/docs/userguide/userguide_single.html#sec:external_dependencies
