@@ -1,22 +1,36 @@
 Provides a custom Ivy resolver for declaring dependencies on ATG modules. The 
-modules must be available locally and are resolved via the `DYNAMO_HOME` 
-environment variable.
+modules must be available locally and are resolved via the `ATG_${ver}_ROOT` 
+environment variables, where ${ver} is the version of ATG required.
+This version of the resolver allows you to require a specific version of 
+ATG as a dependency. So point ATG_10.2_ROOT at c:\ATG\ATG10.2 for example, 
+ATG_10.1.2_ROOT at c:\ATG\ATG10.1.2, etc.
+If your custom module(s) are not in the root of your ATG installation, then
+use the CUSTOM_ROOT environment to point to the parent directory of your 
+custom modules. Nested modules, like DCS.CustomCatalogs and DAF.Endeca.Base
+are supported.
 
 ## Declaring Dependencies
 
 	// always use provided scope since the modules will be provided by ATG
-	provided group:'ATG_MODULE', name:'DAS', version:'SNAPSHOT'
+	provided group:'ATG_MODULE', name:'DAS', version:'10.2'
 
 Module dependencies use the group `ATG_MODULE`. 
 The artifact name is the name of the module,e.g., `DAS`. 
 The version should be `SNAPSHOT` so modules can be updated.
 
-If you are developing an ATG module, your module can declare a dependency on itself. e.g.,
+Custom ATG modules should declare a dependency on themselves. e.g.,
 
-	provided group:'ATG_MODULE', name:'MYMODULE', version:'SNAPSHOT'
+	provided group:'ATG_MODULE', name:'Store.EStore', version:'10.2'
 
-The resolver will automatically pick up any other modules your module depends 
-on in its MANIFEST.MF, so you don't have to declare dependencies twice.
+Note that the version number mentioned here is the version of ATG you want to compile 
+against. The resolver will recursively parse through the MANIFEST.MF file of each 
+module that is a dependency, so you don't have to declare dependencies in multiple 
+places.
+
+The following MANIFEST.MF attributes are used to resolve dependencies:
+	ATG-Required - Used by the ATG assembler to pull in required modules.
+	ATG-Required-If-Present - Used but not mandated by the ATG assembler.
+	ATG-Required-To-Compile - Not used by ATG. Use it to specify a compile time dependency only.
 
 ## Build Systems
 
@@ -32,7 +46,7 @@ added as a repository in your main script:
 	        mavenCentral()
 	    }
 	    dependencies {
-	        classpath 'com.noahsloan.atg:atg-resolver:1.0'
+	        classpath files('/path/to/this.jar')
 	    }
 	}
 
@@ -42,7 +56,7 @@ added as a repository in your main script:
 		}
 
 		dependencies {
-		    compile group:"ATG_MODULE", name:"DAS",version:"SNAPSHOT"
+		    compile group:"ATG_MODULE", name:"Store.EStore", version:"10.1.2"
 		}
 		
 		// the rest of your tasks go here
