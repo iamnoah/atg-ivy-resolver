@@ -1,3 +1,5 @@
+NOTE: I no longer work with ATG, so I can't maintain this module. Try [this fork](https://github.com/rajeshja/atg-ivy-resolver).
+
 Provides a custom Ivy resolver for declaring dependencies on ATG modules. The 
 modules must be available locally and are resolved via the `DYNAMO_HOME` 
 environment variable.
