@@ -1,3 +1,9 @@
 .gradle
-build
+/build/
 gradle.properties
+/bin
+*~
+.settings/
+.classpath
+.project
+
